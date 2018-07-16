@@ -1,0 +1,81 @@
+in part 2 we introduce the image and container.
+
+in this part we will explore the service and be introduce to docker-compose.
+
+lets create our *docker-compose.yml*
+
+then initiate a *swarm*
+`docker swarm init --advertise-addr <ip_addr?`
+
+lets deploy the app / stack
+`docker stack deploy -c docker-compose.yml getstartedlab`
+
+lets investigate our stack
+`docker stack ls` - list the running stack
+`docker service ls` - list the service of the stack
+`docker service ps getstartedlab_web` - list the running process of getstartedlab stack
+
+
+we should see it running in the `localhost:4000`
+
+wait.. why dafuq my redis is not connected ?
+> cannot connect to Redis, counter disabled
+
+if we check our *app.py*
+it is configure to connect to 
+> host="redis"
+
+why not localhost ?
+
+stop the running stack first: remove the stack `docker stack rm getstartedlab``
+
+let try localhost ! :)
+then run `python app.py`
+> permission denied ! :( 
+this is because we are mapping our port 4000 to port 80
+> app.run(host='0.0.0.0', port=80)
+let change the port to 4000 temporarily and the host="localhost"
+
+
+browse `localhost:4000`
+great! it is connected !!
+
+change it to port 80 again then deploy
+
+`docker stack deploy -c docker-compose.yml getstartedlab`
+
+not connected again ?! -_-
+
+
+ok lets connect it..
+rebirth the `app.py` to
+host="redis"
+port="80"
+
+
+lets rewrite our `docker-compose.yml`
+```
+version: "3"
+services:
+  web:
+    image: cdijairo/get-started:part2
+    deploy:
+      replicas: 5
+    ports:
+      - "4000:80"
+  redis:
+    image: redis:alpine
+
+networks:
+  webnet:
+```
+then deploy it again and browser `localhost:4000`
+
+
+you should see that we are now connected, but why ?
+
+docker-compose job is connect services in a stack
+e.g.
+> services.redis is now accessible via redis in the app.py
+> can i use other variable instead ? you can change its variable by just changing the `redis:`
+

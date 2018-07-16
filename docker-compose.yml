@@ -1,0 +1,13 @@
+version: "3"
+services:
+  web:
+    image: cdijairo/get-started:part2
+    deploy:
+      replicas: 5
+    ports:
+      - "4000:80"
+  redis:
+    image: redis:alpine
+
+networks:
+  webnet:
