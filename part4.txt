@@ -1,0 +1,40 @@
+in this part we will learn how to cluster machines
+
+
+first lets create a new docker-machine virtual host
+
+```
+docker-machine create --driver virtualbox myvm1
+docker-machine create --driver virtualbox myvm2
+```
+
+list the create vm
+`docker-machine ls`
+
+lets initiate a swarm on myvm1
+`docker-machine ssh myvm1 "docker swarm init --advertise-addr <myvm1 ip>"
+
+
+then join the myvm2 in the swarm ( you can refer to the response above of vm1 init )
+docker-machine ssh myvm2 "docker swarm join --token <token> <ip>:<port>"
+
+
+in the previous cmd we use ssh to remotely execute codes on the vm.
+now we will remotely access by changing our *env*
+
+`eval $(docker-machine env myvm1)`
+this will change our working station to myvm1
+
+
+to verify `docker-machine ls` and you will see an asterisk (*) on the active column
+
+
+`docker node ls`
+this will list down the node of the swarm
+
+
+then deploy an app refer to the part3
+
+
+you can verify that it is using the nodes by executing
+`docker stack ps <stack_name>`

@@ -75,7 +75,6 @@ then deploy it again and browser `localhost:4000`
 you should see that we are now connected, but why ?
 
 docker-compose job is connect services in a stack
-e.g.
 > services.redis is now accessible via redis in the app.py
 > can i use other variable instead ? you can change its variable by just changing the `redis:`
 
